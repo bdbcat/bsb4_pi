@@ -211,28 +211,58 @@ bool LoadDecryptDll_From_Certificate(wxString cert, wxString *pdecryp_dll_return
       wxString EncDir;
       wxString DecryptDLL;
 
-      wxString reg_decrypt_dir_key(_T("HKEY_LOCAL_MACHINE\\SOFTWARE\\Maptech\\ChartKit\\3.00\\Directories"));
+      wxString reg_decrypt_root_key(_T("HKEY_LOCAL_MACHINE\\SOFTWARE\\Maptech\\ChartKit\\3.00\\"));
+      wxString reg_decrypt_dir_key = reg_decrypt_root_key + _T("Directories");
       wxRegKey RegKey(reg_decrypt_dir_key);
+
+      wxString msg1(_T("   BSB4_PI: First look for ChartKit Directories at "));
+      msg1 += reg_decrypt_dir_key;
+      wxLogMessage (msg1);
+
       if( RegKey.Exists() )
       {
             RegKey.QueryValue(wxString(_T("EncDir")), EncDir);
-//            wxString msg(_("BSB4_PI: Looking for decryption dll location at "));
-//            msg += m_EncDir;
-//            wxLogMessage(msg);
+            if(EncDir.Length()){
+                wxString msg(_("BSB4_PI: Found ChartKit EncDir at "));
+                msg += EncDir;
+                wxLogMessage(msg);
+            }
       }
       else
       {
-//            wxString msg(_T("   BSB4_PI: Could not find registry entry for decryption dll location at "));
-//            msg += reg_decrypt_dir_key ;
-//            wxLogMessage (msg);
+            reg_decrypt_root_key = _T("HKEY_CURRENT_USER\\Software\\Classes\\VirtualStore\\MACHINE\\SOFTWARE\\Wow6432Node\\Maptech\\ChartKit\\3.00\\");
+            wxString reg_decrypt_dir_key = reg_decrypt_root_key + _T("Directories");
+            wxRegKey RegKey(reg_decrypt_dir_key);
 
-            return false;
+            wxString msg(_T("   BSB4_PI: Second look for ChartKit Directories at "));
+            msg += reg_decrypt_dir_key;
+            wxLogMessage (msg);
+
+            if( RegKey.Exists() ) {
+                RegKey.QueryValue(wxString(_T("EncDir")), EncDir);
+                if(EncDir.Length()){
+                    wxString msg(_("BSB4_PI: Found ChartKit EncDir at "));
+                    msg += EncDir;
+                    wxLogMessage(msg);
+                }
+            }
+            else {
+                wxString msg(_("BSB4_PI: Could not find ChartKit Directories"));
+                wxLogMessage(msg);
+                return false;
+            }
+
       }
 
+      if(!EncDir.Length()){
+        wxString msg(_("BSB4_PI: Could not find ChartKit EncDir"));
+        wxLogMessage(msg);
+        return false;
+      }
 
       wxFileName cfn(cert);
 
-      wxString reg_decrypt_cert_key(_T("HKEY_LOCAL_MACHINE\\SOFTWARE\\Maptech\\ChartKit\\3.00\\Encryption"));
+      wxString reg_decrypt_cert_key = reg_decrypt_root_key + _T("Encryption");
       reg_decrypt_cert_key += _T("\\");
       reg_decrypt_cert_key += cfn.GetName();
 
@@ -870,6 +900,7 @@ ChartBSB4::~ChartBSB4()
 int ChartBSB4::Init( const wxString& name, int init_flags )
 {
 
+#if 0
 #ifdef __WXMSW__
       // Look in the registry to validate the existence of BSB4 decryption tools
       wxString EncDir;
@@ -895,6 +926,7 @@ int ChartBSB4::Init( const wxString& name, int init_flags )
 //            return (2);             //INIT_FAIL_REMOVE
       }
 
+#endif
 #endif
 
       int nPlypoint = 0;
