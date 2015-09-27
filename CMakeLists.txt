@@ -1,9 +1,9 @@
 ##---------------------------------------------------------------------------
 ## Author:      bdbcat aka. dsr (Dave Register)
-## Copyright:   
+## Copyright:
 ## License:     wxWidgets License
 ##---------------------------------------------------------------------------
- 
+
 
 # define minimum cmake version
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6.2)
@@ -16,7 +16,7 @@ ENDIF (COMMAND cmake_policy)
 
 PROJECT(bsb4_pi)
 
-SET(PACKAGE_NAME bsb4_win32_pi15_v13_pi)
+SET(PACKAGE_NAME bsb4_win32_pi15_v14_pi)
 SET(PLUGIN_SOURCE_DIR .)
 MESSAGE (STATUS "*** Building ${PACKAGE_NAME} ***")
 
@@ -73,7 +73,7 @@ INCLUDE(${wxWidgets_USE_FILE})
 
 FIND_PACKAGE(Gettext REQUIRED)
 
-# For convenience we define the sources as a variable. You can add 
+# For convenience we define the sources as a variable. You can add
 # header files and cpp/c files and CMake will sort them out
 
 
@@ -88,7 +88,8 @@ ADD_LIBRARY(${PACKAGE_NAME} SHARED ${SRC_BSB4})
 
 
 IF(WIN32)
-  SET(OPENCPN_IMPORT_LIB "E:/opencpn_cmake2010/${CMAKE_CFG_INTDIR}/opencpn.lib")
+#  SET(OPENCPN_IMPORT_LIB "E:/opencpn_cmake2010/${CMAKE_CFG_INTDIR}/opencpn.lib")
+  SET(OPENCPN_IMPORT_LIB "C:/Projects/opencpn/build//${CMAKE_CFG_INTDIR}/opencpn.lib")
   TARGET_LINK_LIBRARIES( ${PACKAGE_NAME} ${OPENCPN_IMPORT_LIB} )
 #  ADD_DEPENDENCIES(${PACKAGE_NAME} ${PARENT})
 ENDIF(WIN32)
@@ -109,7 +110,7 @@ IF(WIN32)
 INSTALL(TARGETS ${PACKAGE_NAME} RUNTIME DESTINATION "c:/Program Files/opencpn/plugins")
 INSTALL(TARGETS ${PACKAGE_NAME} RUNTIME DESTINATION "E:/opencpn_cmake2008/plugins")
 ENDIF(WIN32)
- 	  	 
+
 # find src/ -name \*.cpp -or -name \*.c -or -name \*.h -or -name \*.hpp >po/POTFILES.in
 FIND_PROGRAM(GETTEXT_XGETTEXT_EXECUTABLE xgettext)
 IF (GETTEXT_XGETTEXT_EXECUTABLE)
