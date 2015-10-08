@@ -274,7 +274,7 @@ class Decrypted_FileInputStream;
 // ChartBSB4 Definition
 // ----------------------------------------------------------------------------
 
-class  ChartBSB4 : public PlugInChartBase 
+class  ChartBSB4 : public PlugInChartBase
 {
       DECLARE_DYNAMIC_CLASS(ChartBSB4)
 
@@ -301,6 +301,7 @@ class  ChartBSB4 : public PlugInChartBase
       virtual int latlong_to_pix_vp(double lat, double lon, int &pixx, int &pixy, PlugIn_ViewPort& vp);
       virtual int vp_pix_to_latlong(PlugIn_ViewPort& vp, int pixx, int pixy, double *lat, double *lon);
       virtual void latlong_to_chartpix(double lat, double lon, double &pixx, double &pixy);
+      virtual void chartpix_to_latlong(double pixx, double pixy, double *plat, double *plon);
 
       wxBitmap &RenderRegionView(const PlugIn_ViewPort& VPoint, const wxRegion &Region);
 
@@ -597,4 +598,4 @@ typedef struct {
 
 
 
- 
+
