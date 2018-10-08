@@ -3013,8 +3013,6 @@ bool ChartBSB4::AdjustVP(PlugIn_ViewPort &vp_last, PlugIn_ViewPort &vp_proposed)
       if(!bInside)
             return false;
 
-      PlugIn_ViewPort vp_save = vp_proposed;                 // save a copy
-
       int ret_val = 0;
 
       if(vp_last.bValid)
@@ -3952,10 +3950,10 @@ int ChartBSB4::ReadBSBHdrLine(Decrypted_FileInputStream* ifs, char* buf, int buf
 //-----------------------------------------------------------------------
 int   ChartBSB4::BSBScanScanline(wxInputStream *pinStream )
 {
-      int nLineMarker, nValueShift, iPixel = 0;
-      unsigned char byValueMask, byCountMask;
+      int nLineMarker, iPixel = 0;
+      unsigned char byCountMask;
       unsigned char byNext;
-      int coffset;
+//    int coffset;
 
 //      if(1)
       {
@@ -3968,8 +3966,8 @@ int   ChartBSB4::BSBScanScanline(wxInputStream *pinStream )
             } while( (byNext & 0x80) != 0 );
 
 //      Setup masking values.
-            nValueShift = 7 - nColorSize;
-            byValueMask = (((1 << nColorSize)) - 1) << nValueShift;
+//          nValueShift = 7 - nColorSize;
+//          byValueMask = (((1 << nColorSize)) - 1) << nValueShift;
             byCountMask = (1 << (7 - nColorSize)) - 1;
 
 //      Read and simulate expansion of runs.
@@ -3977,9 +3975,9 @@ int   ChartBSB4::BSBScanScanline(wxInputStream *pinStream )
             while( ((byNext = pinStream->GetC()) != 0 ) && (iPixel < Size_X))
             {
 
-                  int   nPixValue;
+//                int   nPixValue;
                   int nRunCount;
-                  nPixValue = (byNext & byValueMask) >> nValueShift;
+//                nPixValue = (byNext & byValueMask) >> nValueShift;
 
                   nRunCount = byNext & byCountMask;
 
@@ -3998,7 +3996,7 @@ int   ChartBSB4::BSBScanScanline(wxInputStream *pinStream )
 //                  pCL += nRunCount+1;
                   iPixel += nRunCount+1;
             }
-            coffset = pinStream->TellI();
+//          coffset = pinStream->TellI();
 
       }
 
@@ -4228,8 +4226,8 @@ int   ChartBSB4::AnalyzeRefpoints(void)
       int plonmax = 0;
       int platmin = 100000;
       int platmax = 0;
-      int nlonmin, nlonmax, nlatmax, nlatmin;
-      nlonmin =0; nlonmax=0; nlatmax=0; nlatmin=0;
+      int nlonmin, nlonmax;
+      nlonmin =0; nlonmax=0;
 
       for(n=0 ; n<nRefpoint ; n++)
       {
@@ -4252,13 +4250,13 @@ int   ChartBSB4::AnalyzeRefpoints(void)
             {
                   latmin = pRefTable[n].latr;
                   platmin = (int)pRefTable[n].yr;
-                  nlatmin = n;
+                  // nlatmin = n;
             }
             if(pRefTable[n].latr > latmax)
             {
                   latmax = pRefTable[n].latr;
                   platmax = (int)pRefTable[n].yr;
-                  nlatmax = n;
+                  // nlatmax = n;
             }
       }
 
@@ -4299,13 +4297,13 @@ int   ChartBSB4::AnalyzeRefpoints(void)
                         {
                               latmin = pRefTable[n].latr;
                               platmin = (int)pRefTable[n].yr;
-                              nlatmin = n;
+                              // nlatmin = n;
                         }
                         if(pRefTable[n].latr > latmax)
                         {
                               latmax = pRefTable[n].latr;
                               platmax = (int)pRefTable[n].yr;
-                              nlatmax = n;
+                              // nlatmax = n;
                         }
                   }
                   m_bIDLcross = true;
@@ -4501,7 +4499,7 @@ int   ChartBSB4::AnalyzeRefpoints(void)
 
         double xpl_err_max = 0;
         double ypl_err_max = 0;
-        double xpl_err_max_meters, ypl_err_max_meters;
+//      double ypl_err_max_meters, xpl_err_max_meters;
         int px, py;
 
         int pxref, pyref;
@@ -4535,8 +4533,8 @@ int   ChartBSB4::AnalyzeRefpoints(void)
               if(fabs(pRefTable[i].xpl_error) > fabs(xpl_err_max))
                     xpl_err_max = pRefTable[i].xpl_error;
 
-              xpl_err_max_meters = fabs(xpl_err_max * 60 * 1852.0);
-              ypl_err_max_meters = fabs(ypl_err_max * 60 * 1852.0);
+              // xpl_err_max_meters = fabs(xpl_err_max * 60 * 1852.0);
+              // ypl_err_max_meters = fabs(ypl_err_max * 60 * 1852.0);
 
         }
 
@@ -4599,8 +4597,8 @@ int   ChartBSB4::AnalyzeRefpoints(void)
                     if(fabs(pRefTable[i].xpl_error) > fabs(xpl_err_max))
                           xpl_err_max = pRefTable[i].xpl_error;
 
-                    xpl_err_max_meters = fabs(xpl_err_max * 60 * 1852.0);
-                    ypl_err_max_meters = fabs(ypl_err_max * 60 * 1852.0);
+                    // xpl_err_max_meters = fabs(xpl_err_max * 60 * 1852.0);
+                    // ypl_err_max_meters = fabs(ypl_err_max * 60 * 1852.0);
 
               }
 
@@ -4694,7 +4692,7 @@ double polytrans( double* coeff, double lon, double lat )
 /****************************************************************************/
 void toSM(double lat, double lon, double lat0, double lon0, double *x, double *y)
 {
-    double xlon, z, x1, s, y3, s0, y30, y4;
+    double xlon, z, x1, s, s0, y30, y3, y4;
 
     xlon = lon;
 
@@ -4757,7 +4755,7 @@ fromSM(double x, double y, double lat0, double lon0, double *lat, double *lon)
 
 void toSM_ECC(double lat, double lon, double lat0, double lon0, double *x, double *y)
 {
-      double xlon, z, x1, s, y3, s0, y30, y4;
+      double xlon, z, x1, s, s0;
 
       double falsen;
       double test;
@@ -4796,12 +4794,12 @@ void toSM_ECC(double lat, double lon, double lat0, double lon0, double *x, doubl
 
 // y =.5 ln( (1 + sin t) / (1 - sin t) )
       s = sin(lat * DEGREE);
-      y3 = (.5 * log((1 + s) / (1 - s))) * z;
+//    y3 = (.5 * log((1 + s) / (1 - s))) * z;
 
       s0 = sin(lat0 * DEGREE);
-      y30 = (.5 * log((1 + s0) / (1 - s0))) * z;
-      y4 = y3 - y30;
-//      *y = y4;
+//    y30 = (.5 * log((1 + s0) / (1 - s0))) * z;
+//    y4 = y3 - y30;
+//    *y = y4;
 
     //Add eccentricity terms
 
@@ -4858,7 +4856,7 @@ void fromSM_ECC(double x, double y, double lat0, double lon0, double *lat, doubl
 
 void  toTM(float lat, float lon, float lat0, float lon0, double *x, double *y)
 {
-      double A, a, es, f, k0, lambda, phi, lambda0, phi0;
+      double A, a, es, f, k0;
 
       double eccPrimeSquared;
       double N, T, C, MM;
@@ -4878,11 +4876,11 @@ void  toTM(float lat, float lon, float lat0, float lon0, double *x, double *y)
 
       es = 2 * f - f * f;
       eccSquared = es;
-      lambda = lon * DEGREE;
-      phi = lat * DEGREE;
+//    lambda = lon * DEGREE;
+//    phi = lat * DEGREE;
 
-      phi0 = lat0 * DEGREE;
-      lambda0 = lon0 * DEGREE;
+//    phi0 = lat0 * DEGREE;
+//    lambda0 = lon0 * DEGREE;
 
       eccPrimeSquared = (eccSquared)/(1-eccSquared);
 
@@ -4918,7 +4916,7 @@ void  toTM(float lat, float lon, float lat0, float lon0, double *x, double *y)
 void fromTM (double x, double y, double lat0, double lon0, double *lat, double *lon)
 {
 
-      double a, k0, es, f, e1, mu, phi1, phi0, lambda0;
+      double a, k0, es, f, e1, mu;
 
       double eccSquared;
       double eccPrimeSquared;
@@ -4927,8 +4925,8 @@ void fromTM (double x, double y, double lat0, double lon0, double *lat, double *
       double LongOrigin = lon0;
       double rad2deg = 1./DEGREE;
 
-      phi0 = lat0 * DEGREE;
-      lambda0 = lon0 * DEGREE;
+//      phi0 = lat0 * DEGREE;
+//    lambda0 = lon0 * DEGREE;
 
 // constants for WGS-84
 
@@ -4948,7 +4946,7 @@ void fromTM (double x, double y, double lat0, double lon0, double *lat, double *
       phi1Rad = mu      + (3*e1/2-27*e1*e1*e1/32)*sin(2*mu)
                   + (21*e1*e1/16-55*e1*e1*e1*e1/32)*sin(4*mu)
                   +(151*e1*e1*e1/96)*sin(6*mu);
-      phi1 = phi1Rad*rad2deg;
+//    phi1 = phi1Rad*rad2deg;
 
       N1 = a/sqrt(1-eccSquared*sin(phi1Rad)*sin(phi1Rad));
       T1 = tan(phi1Rad)*tan(phi1Rad);
