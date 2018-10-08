@@ -1386,7 +1386,7 @@ int ChartBSB4::Init( const wxString& name, int init_flags )
                               i = tkz.GetPosition();
 
                               char date_string[40];
-                              char date_buf[10];
+                              char date_buf[12];
                               sscanf(&buffer[i], "%s\r\n", date_string);
                               wxString date_wxstr(date_string,  wxConvUTF8);
 
