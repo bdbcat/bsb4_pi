@@ -18,6 +18,7 @@ SET(VERSION_MAJOR "1")
 SET(VERSION_MINOR "4")
 
 #SET(CMAKE_BUILD_TYPE Debug)
+SET CMAKE_BUILD_TYPE Release)
 
 INCLUDE("cmake/PluginConfigure.cmake")
 
