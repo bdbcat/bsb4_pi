@@ -37,8 +37,8 @@ IF(WIN32)
  # SET(OPENCPN_IMPORT_LIB "C:/Projects/opencpn/build/${CMAKE_CFG_INTDIR}/opencpn.lib") <---bdbcat inline build
  # SET(OPENCPN_IMPORT_LIB "C:/Users/Rick/Documents/Github/bsb4_pi/build/${CMAKE_CFG_INTDIR}/opencpn.lib") <--works standalone for me
  # SET(OPENCPN_IMPORT_LIB "../build/${CMAKE_CFG_INTDIR}/opencpn") <---locally standalone
- # SET(OPENCPN_IMPORT_LIB "../build/opencpn.lib")   <---for Appveyor 
-  SET(OPENCPN_IMPORT_LIB "../build/opencpn.lib") 
+ # SET(OPENCPN_IMPORT_LIB "../build/opencpn")   <---for Appveyor 
+  SET(OPENCPN_IMPORT_LIB "../build/opencpn") 
   TARGET_LINK_LIBRARIES( ${PACKAGE_NAME} ${OPENCPN_IMPORT_LIB} )
 ENDIF(WIN32)
 
