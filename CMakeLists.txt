@@ -20,7 +20,10 @@ SET(VERSION_MAJOR "1")
 SET(VERSION_MINOR "5")
 
 #SET(CMAKE_BUILD_TYPE Debug)
+
 SET (CMAKE_BUILD_TYPE Release)
+# Prefer libGL.so to libOpenGL.so, see CMP0072
+set(OpenGL_GL_PREFERENCE "LEGACY")
 
 INCLUDE("cmake/PluginConfigure.cmake")
 
