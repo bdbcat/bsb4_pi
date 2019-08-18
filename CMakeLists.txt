@@ -25,6 +25,7 @@ SET (CMAKE_BUILD_TYPE Release)
 # Prefer libGL.so to libOpenGL.so, see CMP0072
 set(OpenGL_GL_PREFERENCE "LEGACY")
 
+INCLUDE_DIRECTORIES(BEFORE ${PROJECT_SOURCE_DIR}/api-16)
 INCLUDE("cmake/PluginConfigure.cmake")
 
 SET(SRC_BSB4
