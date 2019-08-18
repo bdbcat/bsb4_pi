@@ -7,12 +7,6 @@ matrix:
     compiler: gcc
     script:
     - "./ci/travis-build-debian.sh"
-    #- env:
-    #  - OCPN_TARGET=flatpak
-    #  services:
-    #  - docker
-    #  script:
-    #  - "./ci/travis-build-flatpak.sh"
   - env:
     - OCPN_TARGET=fedora
     services:
@@ -25,19 +19,16 @@ matrix:
     compiler: clang
     script:
     - "./ci/travis-build-osx.sh"
-
 notifications:
   email: false
-
 git:
   depth: 10
-
 deploy:
   provider: bintray
   file: ci/bintray.js
   user: leamas
   skip_cleanup: true
   on:
-      all_branches: true
+    all_branches: true
   key:
-      secure: "IIpE1Bvvaiz96tlgdezt2awd9drdy9q4+0yCno8wlEOJuoEXxlkZCExj434KI7RbcCrXDK68IC6d7anhmoGyJ6OQSCnmbFvpTLzMR0YNVSm6oli1pKTPVzydr9DG7ZFTSzT37nKvNyyby74iWHAgtHSolW5UY3chBKE8iRiCrlGGvQzmUUxmXHHJYjzCWPk5OA2julZdR0qIDubAv3zCumL4b/F61JQk0SWNFiJUno+czCdGcBJDYVA5gfn/iNFmNJKyEBQ7hq946WSLuoX6AkBMryz3sJnUVMZFzIoHJz8FmuF+agyX9NQl1dwzrhF1pbaMJJpnx6m/j3Nm65bFSZA8m7nr0zxj+GfCePAcobmnfpwRPqhJMKUqNXGzYNnPdP725E3gVryBECvvAtxiEjql1qaIgTy75wANBO/80XwcF4OfaEHsyQp5gh6BknL5qNzKpAKA4g5oY6vbmz7yddI55yIIyRjnJnBbX3NfkauyJ5mHqz0ZU/h8tin/LFvOyAsPay/3WgLf8JsLsBIGydIAcMCNW/tEMf9L9wKLMOXMsOxFMDbABznb7AlIjUXTtWQJoNHaWaPTKwo8VXSQs+qHt+lf135HUMG0sFnLOzElDqsnbAj0P9MINaxWNetHM880LIZFPdJTW1pBAeoN8qHz7QyL0jhIKQ1kpdxpiD8="
+    secure: Cz2bqcuok50QuZ01fae6AsOewvdA+0ob6Jr46sV1zaRHff/GEGXdVr+qC53tfTPyei4MLKzW5Q0+8lm3Ld+Jvs4dMhnOgB7oaCiYz1aCDvjicbewJffsHXrwv48/n99hTAMYd9ddVJfOrAsZiI44V3GLdQ1ycLS2YW/Fg1aDyidDLmkKu+KDjwHMJkAc3IxiJ6hQwDpDu4erGXh9KqBW6AGipAY5JqoyQFz2dpiiljqPWGkgOy+QvzuP2T12/29JeDd5KbcfyVRX8UHKug1Nm3GBtv06V9tv79WmQ9ypcbxHej/T1dNANaR0x+ZKIw4R3kKwYmxAVtZTUTII/0ZtfWMBNPWZRi0JL3e6h1b4CGi9MFxB7SuYVw22jxPKfj9ACAzosVsBlH8YoPij/CUFoIz/aUCpmDx6dtibfcA/wMgP6KUWX+U1u5bIubDNpOewXPi/jO0k8IzYL1CEz4LgNyfAre0q1tE0szcie7/oJkfdSIjVasNR4HDL9m5XMvzigQrKpmNyfNMdnK4SNi5VVqJn7OzzJQPcDkTHy4uHGKt/biP9+h+PI1w9kNnCH5lYQ/WwOE4x8Bnz+4+CQ0p3nIrB5nGDb3lIijMR4RHxUY5zXgp0upy5XdaIsv1zbpmm/J5FIuuFC7zDUN4Jpyu+lkIObsqVdQ5NLkdBk4SF6zg=
