@@ -27,6 +27,7 @@ set(OpenGL_GL_PREFERENCE "LEGACY")
 
 INCLUDE_DIRECTORIES(BEFORE ${PROJECT_SOURCE_DIR}/api-16)
 INCLUDE("cmake/PluginConfigure.cmake")
+set(CMAKE_CXX_STANDARD 11)
 
 SET(SRC_BSB4
             src/bsb4_pi.h
