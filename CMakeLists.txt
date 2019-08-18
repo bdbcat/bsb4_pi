@@ -18,7 +18,15 @@ SET(OCPN_MIN_VERSION "ov50")
 
 SET(VERSION_MAJOR "1")
 SET(VERSION_MINOR "5")
+SET(VERSION_PATCH "0")
 
+SET(PACKAGE_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
+SET(PKG_RELEASE "1")
+SET(PKG_API_VERSION "1.16")
+SET(PKG_AUTHOR "David S Register")
+SET(PKG_NVR ${PACKAGE_NAME}-${PACKAGE_VERSION}-${PKG_RELEASE})
+
+include("cmake/PluginSetup.cmake")
 #SET(CMAKE_BUILD_TYPE Debug)
 
 SET (CMAKE_BUILD_TYPE Release)
@@ -43,3 +51,10 @@ ADD_LIBRARY(${PACKAGE_NAME} SHARED ${SRC_BSB4})
 INCLUDE("cmake/PluginInstall.cmake")
 INCLUDE("cmake/PluginLocalization.cmake")
 INCLUDE("cmake/PluginPackage.cmake")
+
+set(PLUGIN_NAME bsb4-plugin-${PKG_TARGET}-${PKG_TARGET_VERSION})
+message(STATUS "Build target: ${PKG_TARGET}-${PKG_TARGET_VERSION}")
+configure_file(
+  ${CMAKE_SOURCE_DIR}/bsb4-plugin.xml.in
+  ${CMAKE_CURRENT_BINARY_DIR}/${PLUGIN_NAME}.xml
+)
