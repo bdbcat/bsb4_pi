@@ -6,6 +6,7 @@
 
 # define minimum cmake version
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6.2)
+CMAKE_POLICY(SET CMP0037 NEW)
 
 PROJECT(bsb4_pi)
 
@@ -27,11 +28,39 @@ SET(PKG_AUTHOR "David S Register")
 SET(PKG_NVR ${PACKAGE_NAME}-${PACKAGE_VERSION}-${PKG_RELEASE})
 
 include("cmake/PluginSetup.cmake")
-#SET(CMAKE_BUILD_TYPE Debug)
+set(PLUGIN_NAME bsb4-plugin-${PKG_TARGET}-${PKG_TARGET_VERSION})
 
 SET (CMAKE_BUILD_TYPE Release)
 # Prefer libGL.so to libOpenGL.so, see CMP0072
 set(OpenGL_GL_PREFERENCE "LEGACY")
+
+
+if (OCPN_FLATPAK)
+    find_program(TAR NAMES gtar tar)
+    if (NOT TAR)
+        message(FATAL_ERROR "tar not found, required for OCPN_FLATPAK")
+    endif ()
+    configure_file(
+        ${CMAKE_SOURCE_DIR}/bsb4-plugin.xml.in
+        ${CMAKE_CURRENT_BINARY_DIR}/${PLUGIN_NAME}.xml
+    )
+    add_custom_target(flatpak-build ALL
+        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/flatpak
+        COMMAND flatpak-builder --force-clean
+            ${CMAKE_CURRENT_BINARY_DIR}/app
+            org.opencpn.OpenCPN.Plugin.bsb4.yaml
+    )
+    add_custom_target("flatpak-pkg")
+    add_custom_command(
+        TARGET flatpak-pkg
+        COMMAND ${TAR}
+            -czf ${PKG_NVR}_${PKG_TARGET_NVR}.tar.gz
+            --transform 's|.*/files/|bsb4_pi-flatpak-${PACKAGE_VERSION}/|'
+            ${CMAKE_CURRENT_BINARY_DIR}/app/files
+    )
+    return ()
+endif()
+
 
 INCLUDE_DIRECTORIES(BEFORE ${PROJECT_SOURCE_DIR}/api-16)
 INCLUDE("cmake/PluginConfigure.cmake")
@@ -52,7 +81,6 @@ INCLUDE("cmake/PluginInstall.cmake")
 INCLUDE("cmake/PluginLocalization.cmake")
 INCLUDE("cmake/PluginPackage.cmake")
 
-set(PLUGIN_NAME bsb4-plugin-${PKG_TARGET}-${PKG_TARGET_VERSION})
 message(STATUS "Build target: ${PKG_TARGET}-${PKG_TARGET_VERSION}")
 configure_file(
   ${CMAKE_SOURCE_DIR}/bsb4-plugin.xml.in
