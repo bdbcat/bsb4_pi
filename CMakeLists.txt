@@ -6,6 +6,7 @@
 
 # define minimum cmake version
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6.2)
+CMAKE_POLICY(SET CMP0037 NEW)
 
 PROJECT(bsb4_pi)
 
@@ -18,11 +19,52 @@ SET(OCPN_MIN_VERSION "ov50")
 
 SET(VERSION_MAJOR "1")
 SET(VERSION_MINOR "5")
+SET(VERSION_PATCH "0")
 
-#SET(CMAKE_BUILD_TYPE Debug)
+SET(PACKAGE_VERSION "${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH}")
+SET(PKG_RELEASE "1")
+SET(PKG_API_VERSION "1.16")
+SET(PKG_AUTHOR "David S Register")
+SET(PKG_NVR ${PACKAGE_NAME}-${PACKAGE_VERSION}-${PKG_RELEASE})
+
+include("cmake/PluginSetup.cmake")
+set(PLUGIN_NAME bsb4-plugin-${PKG_TARGET}-${PKG_TARGET_VERSION})
+
 SET (CMAKE_BUILD_TYPE Release)
+# Prefer libGL.so to libOpenGL.so, see CMP0072
+set(OpenGL_GL_PREFERENCE "LEGACY")
 
+
+if (OCPN_FLATPAK)
+    find_program(TAR NAMES gtar tar)
+    if (NOT TAR)
+        message(FATAL_ERROR "tar not found, required for OCPN_FLATPAK")
+    endif ()
+    configure_file(
+        ${CMAKE_SOURCE_DIR}/bsb4-plugin.xml.in
+        ${CMAKE_CURRENT_BINARY_DIR}/${PLUGIN_NAME}.xml
+    )
+    add_custom_target(flatpak-build ALL
+        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/flatpak
+        COMMAND flatpak-builder --force-clean
+            ${CMAKE_CURRENT_BINARY_DIR}/app
+            org.opencpn.OpenCPN.Plugin.bsb4.yaml
+    )
+    add_custom_target("flatpak-pkg")
+    add_custom_command(
+        TARGET flatpak-pkg
+        COMMAND ${TAR}
+            -czf ${PKG_NVR}_${PKG_TARGET_NVR}.tar.gz
+            --transform 's|.*/files/|bsb4_pi-flatpak-${PACKAGE_VERSION}/|'
+            ${CMAKE_CURRENT_BINARY_DIR}/app/files
+    )
+    return ()
+endif()
+
+
+INCLUDE_DIRECTORIES(BEFORE ${PROJECT_SOURCE_DIR}/api-16)
 INCLUDE("cmake/PluginConfigure.cmake")
+set(CMAKE_CXX_STANDARD 11)
 
 SET(SRC_BSB4
             src/bsb4_pi.h
@@ -33,16 +75,14 @@ SET(SRC_BSB4
      )
 ADD_LIBRARY(${PACKAGE_NAME} SHARED ${SRC_BSB4})
 
-IF(WIN32)
- # SET(OPENCPN_IMPORT_LIB "C:/Projects/opencpn/build/${CMAKE_CFG_INTDIR}/opencpn.lib") <---bdbcat inline build
- # SET(OPENCPN_IMPORT_LIB "C:/Users/Rick/Documents/Github/bsb4_pi/build/${CMAKE_CFG_INTDIR}/opencpn.lib") <--works standalone for me
- # SET(OPENCPN_IMPORT_LIB "../build/${CMAKE_CFG_INTDIR}/opencpn") <---locally standalone
- # SET(OPENCPN_IMPORT_LIB "../build/opencpn")   <---for Appveyor 
-  SET(OPENCPN_IMPORT_LIB "../build/opencpn") 
-  TARGET_LINK_LIBRARIES( ${PACKAGE_NAME} ${OPENCPN_IMPORT_LIB} )
-ENDIF(WIN32)
 
 
 INCLUDE("cmake/PluginInstall.cmake")
 INCLUDE("cmake/PluginLocalization.cmake")
 INCLUDE("cmake/PluginPackage.cmake")
+
+message(STATUS "Build target: ${PKG_TARGET}-${PKG_TARGET_VERSION}")
+configure_file(
+  ${CMAKE_SOURCE_DIR}/bsb4-plugin.xml.in
+  ${CMAKE_CURRENT_BINARY_DIR}/${PLUGIN_NAME}.xml
+)

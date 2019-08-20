@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opencpn-plugin version="1">
+  <name> bsb4 </name>
+  <version> ${PACKAGE_VERSION} </version>
+  <release> ${PKG_RELEASE} </release>
+  <summary> OpenCPN support for BSB4 raster charts </summary>
+
+  <api-version> ${PKG_API_VERSION} </api-version>
+  <open-source> no </open-source>
+  <author> ${PKG_AUTHOR} </author>
+  <source> https://github.com/bdbcat/bsb4_pi</source>
+
+  <description>
+    BSB4 plugin for OpenCPN provides support of BSB Version 4 Raster charts,
+    the format used by many hydrographic authorities throughout the world.
+    Supported charts must have been installed with appropriate encryption
+    certificates in place.
+  </description>
+
+  <target>${PKG_TARGET}</target>
+  <target-version>${PKG_TARGET_VERSION}</target-version>
+  <tarball-url>
+    https://bintray.com/leamas/OpenCPN/download_file?file_path=${PKG_NVR}_${PKG_TARGET_NVR}.tar.gz
+  </tarball-url>
+</opencpn-plugin>
+
+
