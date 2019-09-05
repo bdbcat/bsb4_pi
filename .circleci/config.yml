@@ -17,13 +17,13 @@ jobs:
        - run: cat /etc/apt/sources.list
        - run: ci/circleci-build-debian.sh
    build-flatpak:
-     docker:
-         - image: fedora:29
+     machine:
+       image: circleci/classic:201808-01
      environment:
        - OCPN_TARGET:  flatpak
      steps:
        - checkout
-       - run: ci/docker-build-flatpak.sh
+       - run: ci/circleci-build-flatpak.sh
    build-fedora:
      docker:
          - image: fedora:29
