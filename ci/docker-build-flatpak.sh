@@ -2,12 +2,18 @@
 cd $(dirname $(readlink -fn $0))
 
 #
-# Actually build the Travis flatpak artifacts inside the Fedora container
+# Actually build the flatpak artifacts inside the Fedora container
 #
 set -xe
 
-df -h
-cd /opencpn-ci
+if [-n "$TRAVIS" ]; then
+    cd /opencpn-ci
+fi
+
+if [ "$CIRCLECI" ]; then
+   cd /root/project
+fi
+
 su -c "dnf install -y sudo cmake gcc-c++ flatpak-builder flatpak make tar"
 flatpak remote-add --user --if-not-exists flathub \
     https://flathub.org/repo/flathub.flatpakrepo
