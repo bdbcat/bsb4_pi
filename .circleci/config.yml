@@ -33,6 +33,15 @@ jobs:
        - run: su -c "dnf install -q -y git openssh-clients openssh-server"
        - checkout
        - run:  ci/circleci-build-fedora.sh
+   build-mingw:
+     docker:
+         - image: fedora:29
+     environment:
+       - OCPN_TARGET:  mingw
+     steps:
+       - run: su -c "dnf install -q -y git openssh-clients openssh-server"
+       - checkout
+       - run:  ci/circleci-build-mingw.sh
    build-macos:
      macos:
        xcode: "10.0.0"
@@ -59,6 +68,10 @@ workflows:
             branches:
               only: master
       - build-macos:
+          filters:
+            branches:
+              only: master
+      - build-mingw:
           filters:
             branches:
               only: master

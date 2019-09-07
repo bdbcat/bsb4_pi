@@ -24,7 +24,7 @@ IF(WIN32)
 # assuming wxwidgets is compiled with unicode, this is needed for mingw headers
     ADD_DEFINITIONS( " -DUNICODE" )
     TARGET_LINK_LIBRARIES(${PACKAGE_NAME} ${OPENGL_LIBRARIES})
-    SET(OPENCPN_IMPORT_LIB "${PARENT}.dll")
+    SET(OPENCPN_IMPORT_LIB "${PROJECT_SOURCE_DIR}/api-16/libopencpn.dll.a")
     SET( CMAKE_SHARED_LINKER_FLAGS "-L../buildwin" )
   ENDIF(MINGW)
 
