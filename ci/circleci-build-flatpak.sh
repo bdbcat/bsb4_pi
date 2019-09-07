@@ -47,10 +47,10 @@ pyenv rehash
 
 old=$(ls $HOME/project/build/*.tar.gz)
 tarball=$(echo $old | sed "s/.tar.gz/-$CIRCLE_BUILD_NUMBER.$commit.tar.gz/")
-mv $old $tarball
+sudo mv $old $tarball
 old=$(ls $HOME/project/build/*.xml)
 xml=$(echo $old | sed "s/.xml/-$CIRCLE_BUILD_NUMBER.$commit.xml/")
-mv $old $xml
+sudo mv $old $xml
 cloudsmith push raw --republish --no-wait-for-sync \
     alec-leamas/opencpn-plugins-unstable $tarball
 cloudsmith push raw --republish --no-wait-for-sync \
