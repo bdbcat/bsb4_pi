@@ -13,7 +13,7 @@ set -xe
 PLUGIN=bsb4
 
 DOCKER_SOCK="unix:///var/run/docker.sock"
-if [-n "$TRAVIS" ]; then
+if [ -n "$TRAVIS" ]; then
     TOPDIR=/opencpn-ci
 fi
 
@@ -26,6 +26,7 @@ echo "DOCKER_OPTS=\"-H tcp://127.0.0.1:2375 -H $DOCKER_SOCK -s devicemapper\"" \
 sudo service docker restart;
 sleep 5;
 sudo docker pull fedora:28;
+sleep 2;
 
 docker run --privileged -d -ti -e "container=docker"  \
     -e TOPDIR=$TOPDIR \
@@ -40,18 +41,3 @@ docker exec -ti $DOCKER_CONTAINER_ID /bin/bash -xec \
 docker ps -a
 docker stop $DOCKER_CONTAINER_ID
 docker rm -v $DOCKER_CONTAINER_ID
-
-pyenv global 3.7.0
-python -m pip install cloudsmith-cli
-pyenv rehash
-
-old=$(ls $HOME/project/build/*.tar.gz)
-tarball=$(echo $old | sed "s/.tar.gz/-$CIRCLE_BUILD_NUMBER.$commit.tar.gz/")
-sudo mv $old $tarball
-old=$(ls $HOME/project/build/*.xml)
-xml=$(echo $old | sed "s/.xml/-$CIRCLE_BUILD_NUMBER.$commit.xml/")
-sudo mv $old $xml
-cloudsmith push raw --republish --no-wait-for-sync \
-    alec-leamas/opencpn-plugins-unstable $tarball
-cloudsmith push raw --republish --no-wait-for-sync \
-    alec-leamas/opencpn-plugins-unstable $xml

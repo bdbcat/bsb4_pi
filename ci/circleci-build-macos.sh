@@ -27,4 +27,3 @@ cmake -DOCPN_CI_BUILD=$CI_BUILD \
   ..
 make -sj2
 make package
-chmod 644 /usr/local/lib/lib*.dylib

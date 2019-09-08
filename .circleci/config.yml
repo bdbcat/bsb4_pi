@@ -16,6 +16,7 @@ jobs:
            | sudo tee -a /etc/apt/sources.list
        - run: cat /etc/apt/sources.list
        - run: ci/circleci-build-debian.sh
+       - run: ci/circleci-upload.sh
    build-flatpak:
      machine:
        image: circleci/classic:201808-01
@@ -24,6 +25,7 @@ jobs:
      steps:
        - checkout
        - run: ci/circleci-build-flatpak.sh
+       - run: ci/circleci-upload.sh
    build-fedora:
      docker:
          - image: fedora:29
@@ -32,7 +34,8 @@ jobs:
      steps:
        - run: su -c "dnf install -q -y git openssh-clients openssh-server"
        - checkout
-       - run:  ci/circleci-build-fedora.sh
+       - run: ci/circleci-build-fedora.sh
+       - run: ci/circleci-upload.sh
    build-mingw:
      docker:
          - image: fedora:29
@@ -41,7 +44,8 @@ jobs:
      steps:
        - run: su -c "dnf install -q -y git openssh-clients openssh-server"
        - checkout
-       - run:  ci/circleci-build-mingw.sh
+       - run: ci/circleci-build-mingw.sh
+       - run: ci/circleci-upload.sh
    build-macos:
      macos:
        xcode: "10.0.0"
@@ -50,6 +54,7 @@ jobs:
      steps:
        - checkout
        - run: ci/circleci-build-macos.sh
+       - run: ci/circleci-upload.sh
 
 workflows:
   version: 2
