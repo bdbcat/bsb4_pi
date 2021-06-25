@@ -234,7 +234,7 @@ void MolodenskyTransform (double lat, double lon, double *to_lat, double *to_lon
       double clon = cos (from_lon);
       double ssqlat = slat * slat;
       double adb = 1.0 / (1.0 - from_f);  // "a divided by b"
-      double dlat, dlon, dh;
+      double dlat, dlon;
 
       double rn = from_a / sqrt (1.0 - from_esq * ssqlat);
       double rm = from_a * (1. - from_esq) / pow ((1.0 - from_esq * ssqlat), 1.5);
@@ -246,8 +246,8 @@ void MolodenskyTransform (double lat, double lon, double *to_lat, double *to_lon
 
       dlon = (-dx * slon + dy * clon) / ((rn + from_h) * clat);
 
-      dh = (dx * clat * clon) + (dy * clat * slon) + (dz * slat)
-                  - (da * (from_a / rn)) + ((df * rn * ssqlat) / adb);
+//    dh = (dx * clat * clon) + (dy * clat * slon) + (dz * slat)
+//                - (da * (from_a / rn)) + ((df * rn * ssqlat) / adb);
 
       *to_lon = lon + dlon/DEGREE;
       *to_lat = lat + dlat/DEGREE;
